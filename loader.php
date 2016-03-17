@@ -7,7 +7,7 @@
  */
 
 use LinusShops\Prophet\Events;
-use LinusShops\Prophet\Magento;
+use LinusShops\Prophet\Injector;
 
 $frameworkPath = __DIR__;
 $prophetRoot = $argv[1];
@@ -18,10 +18,10 @@ $magentoPath = $argv[3];
 require($frameworkPath.'/vendor/autoload.php');
 require($prophetRoot.'/Injector.php');
 
-\LinusShops\Prophet\Injector::bootMagento($magentoPath);
-\LinusShops\Prophet\Injector::injectAutoloaders($modulePath, $magentoPath, $prophetRoot);
+Injector::bootMagento($magentoPath);
+Injector::injectAutoloaders($modulePath, $magentoPath, $prophetRoot);
 
-\LinusShops\Prophet\Injector::setPaths(array(
+Injector::setPaths(array(
     'module' => $modulePath,
     'magento' => $magentoPath,
     'prophet' => $prophetRoot,
@@ -36,4 +36,6 @@ $options = array(
 
 array_unshift($options, 'phpunit');
 
-return $runner->run($options, false);
+Injector::dispatchPremodule();
+$runner->run($options, false);
+Injector::dispatchPostmodule();
