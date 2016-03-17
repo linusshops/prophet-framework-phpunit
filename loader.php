@@ -16,17 +16,17 @@ $magentoPath = $argv[3];
 
 //Local autoloader
 require($frameworkPath.'/vendor/autoload.php');
+require($prophetRoot.'/Injector.php');
 
-//Prophet autoloader
-require($prophetRoot.'/vendor/autoload.php');
+\LinusShops\Prophet\Injector::bootMagento($magentoPath);
+\LinusShops\Prophet\Injector::injectAutoloaders($modulePath, $magentoPath, $prophetRoot);
 
-$options = new \LinusShops\Prophet\Events\Options();
-
-Events::dispatch(Events::PROPHET_PREMAGENTO, $options);
-Magento::bootstrap($options);
-Events::dispatch(Events::PROPHET_POSTMAGENTO);
-
-Magento::injectAutoloaders($modulePath, $magentoPath);
+\LinusShops\Prophet\Injector::setPaths(array(
+    'module' => $modulePath,
+    'magento' => $magentoPath,
+    'prophet' => $prophetRoot,
+    'framework' => $frameworkPath
+));
 
 $runner = new \PHPUnit_TextUI_Command();
 $options = array(
