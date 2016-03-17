@@ -28,6 +28,12 @@ Injector::setPaths(array(
     'framework' => $frameworkPath
 ));
 
+if (!is_file($modulePath.'/phpunit.xml')) {
+    echo "phpunit.xml does not exist.".PHP_EOL;
+    return;
+}
+
+
 $runner = new \PHPUnit_TextUI_Command();
 $options = array(
     '--configuration',
